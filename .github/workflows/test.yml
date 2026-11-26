@@ -1,0 +1,36 @@
+name: Playwright tests
+on:
+  push: { branches: [main] }
+  pull_request: { branches: [main] }
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix: { shard: [1, 2] }
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 20 }
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - run: npx playwright test --shard=${{ matrix.shard }}/2
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with: { name: "blob-report-${{ matrix.shard }}", path: blob-report/, retention-days: 7 }
+  merge-report:
+    needs: test
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 20 }
+      - run: npm ci
+      - uses: actions/download-artifact@v4
+        with: { path: all-blob-reports, pattern: blob-report-*, merge-multiple: true }
+      - run: npx playwright merge-reports --reporter html ./all-blob-reports
+      - uses: actions/upload-artifact@v4
+        with: { name: html-report, path: playwright-report/, retention-days: 7 }
+      - if: needs.test.result != 'success'
+        run: exit 1
