@@ -1,0 +1,30 @@
+[   -3302ms] [ERROR] Failed to load resource: the server responded with a status of 401 () @ https://api.practicesoftwaretesting.com/users/me:0
+[   -3299ms] [ERROR] ERROR {message: Unauthorized} @ https://practicesoftwaretesting.com/chunk-XPTZBBTO.js:6
+[   -2609ms] [ERROR] Failed to load resource: the server responded with a status of 401 () @ https://api.practicesoftwaretesting.com/users/me:0
+[   14297ms] [ERROR] Failed to load resource: the server responded with a status of 401 () @ https://api.practicesoftwaretesting.com/users/me:0
+[   14300ms] [ERROR] ERROR {message: Unauthorized} @ https://practicesoftwaretesting.com/chunk-XPTZBBTO.js:6
+[   14404ms] [ERROR] Failed to load resource: the server responded with a status of 401 () @ https://api.practicesoftwaretesting.com/users/me:0
+[   40388ms] [ERROR] Failed to load resource: the server responded with a status of 401 () @ https://api.practicesoftwaretesting.com/users/me:0
+[   40390ms] [ERROR] ERROR {message: Unauthorized} @ https://practicesoftwaretesting.com/chunk-XPTZBBTO.js:6
+[   40473ms] [ERROR] Failed to load resource: the server responded with a status of 401 () @ https://api.practicesoftwaretesting.com/users/me:0
+[   47199ms] [ERROR] Failed to load resource: the server responded with a status of 401 () @ https://api.practicesoftwaretesting.com/users/me:0
+[   47210ms] [ERROR] ERROR {message: Unauthorized} @ https://practicesoftwaretesting.com/chunk-XPTZBBTO.js:6
+[   47257ms] [ERROR] Failed to load resource: the server responded with a status of 401 () @ https://api.practicesoftwaretesting.com/users/me:0
+[   56896ms] [ERROR] Failed to load resource: the server responded with a status of 401 () @ https://api.practicesoftwaretesting.com/users/me:0
+[   56903ms] [ERROR] ERROR {message: Unauthorized} @ https://practicesoftwaretesting.com/chunk-XPTZBBTO.js:6
+[   57008ms] [ERROR] Failed to load resource: the server responded with a status of 401 () @ https://api.practicesoftwaretesting.com/users/me:0
+[   68256ms] [ERROR] Failed to load resource: the server responded with a status of 401 () @ https://api.practicesoftwaretesting.com/users/me:0
+[   68306ms] [ERROR] ERROR {message: Unauthorized} @ https://practicesoftwaretesting.com/chunk-XPTZBBTO.js:6
+[   68334ms] [ERROR] Failed to load resource: the server responded with a status of 401 () @ https://api.practicesoftwaretesting.com/users/me:0
+[   81640ms] [ERROR] Failed to load resource: the server responded with a status of 401 () @ https://api.practicesoftwaretesting.com/users/me:0
+[   81725ms] [ERROR] Failed to load resource: the server responded with a status of 401 () @ https://api.practicesoftwaretesting.com/users/me:0
+[   81726ms] [ERROR] ERROR {message: Unauthorized} @ https://practicesoftwaretesting.com/chunk-XPTZBBTO.js:6
+[   98657ms] [ERROR] Failed to load resource: the server responded with a status of 401 () @ https://api.practicesoftwaretesting.com/users/me:0
+[   98661ms] [ERROR] ERROR {message: Unauthorized} @ https://practicesoftwaretesting.com/chunk-XPTZBBTO.js:6
+[   98742ms] [ERROR] Failed to load resource: the server responded with a status of 401 () @ https://api.practicesoftwaretesting.com/users/me:0
+[  107693ms] [ERROR] Failed to load resource: the server responded with a status of 401 () @ https://api.practicesoftwaretesting.com/users/me:0
+[  107698ms] [ERROR] ERROR {message: Unauthorized} @ https://practicesoftwaretesting.com/chunk-XPTZBBTO.js:6
+[  107779ms] [ERROR] Failed to load resource: the server responded with a status of 401 () @ https://api.practicesoftwaretesting.com/users/me:0
+[  134679ms] [ERROR] Failed to load resource: the server responded with a status of 401 () @ https://api.practicesoftwaretesting.com/users/me:0
+[  134765ms] [ERROR] Failed to load resource: the server responded with a status of 401 () @ https://api.practicesoftwaretesting.com/users/me:0
+[  134770ms] [ERROR] ERROR {message: Unauthorized} @ https://practicesoftwaretesting.com/chunk-XPTZBBTO.js:6

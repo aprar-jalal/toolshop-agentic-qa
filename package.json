@@ -1,0 +1,23 @@
+{
+  "name": "toolshop-agentic-qa",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/aprar-jalal/toolshop-agentic-qa.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/aprar-jalal/toolshop-agentic-qa/issues"
+  },
+  "homepage": "https://github.com/aprar-jalal/toolshop-agentic-qa#readme",
+  "devDependencies": {
+    "@playwright/test": "^1.65.1"
+  }
+}
