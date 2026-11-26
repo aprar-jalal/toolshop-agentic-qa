@@ -4,7 +4,7 @@
 
 Test plan for the Price Range slider (left sidebar, home page) of Toolshop at https://practicesoftwaretesting.com. Oracle: specs/requirements/price-range.md (PR1-PR6) and specs/requirements/general.md (requirements are the source of truth; app disagreement = BUG; assertions derive from requirements; healer may change locators only).
 
-Scope: only scenarios that verify PR1-PR6. Category and brand filters appear only in combination with the price range (PR6). Sort, search, pagination-only, eco-friendly and accessibility checks are out of scope for this feature.
+Scope: only scenarios that verify PR1-PR6. Tests are UI-only: no API calls and no mocked responses. Category and brand filters appear only in combination with the price range (PR6). Sort, search, pagination-only, eco-friendly and accessibility checks are out of scope for this feature.
 
 Assertion rule: every `expect` is derived from a requirement, e.g. "every shown price is within [min, max]" (PR2), "a product priced exactly at min/max is shown" (PR3), "min <= max" (PR4), "the no-results message is shown" (PR5), "every shown product matches all active filters" (PR6). Do not assert product counts, totals, page counts or the highest/lowest shown price. Product names and prices in this plan are examples of test data only, used to pick useful ranges.
 
@@ -12,14 +12,18 @@ Seed: seed.spec.ts (page.goto('https://practicesoftwaretesting.com'), title matc
 
 Exploration notes (background for test authors, never oracles):
 - Slider is ngx-slider; handles are role=slider with aria-label "ngx-slider" (min) and "ngx-slider-max" (max); use getByRole('slider',{name:'ngx-slider',exact:true}) because a non-exact name matches both. Scale 0..200, integer steps; ArrowLeft/Right = 1, PageUp/PageDown = 20 (10% of scale), Home/End = scale ends. Floating labels show current min/max (and "min - max" bubble). Read the current values from aria-valuenow.
-- On load the slider shows 1 and 100. Catalog prices observed from 3.55 to 178.20. Products above 100 (examples): 100.79 Random Orbit Sander, 119.24 Cordless Drill 18V, 125.23 Cordless Drill 20V, 172.52 Wooden Workbench, 178.20 Workbench with Drawers. Prices are non-integer while slider values are integers, so exact-equality boundaries (PR3) cannot be hit by the slider alone; use API-response interception (page.route on api.practicesoftwaretesting.com/products) to inject a product priced exactly at min/max.
+- On load the slider shows 1 and 100. Catalog prices observed from 3.55 to 178.20. Products above 100 (examples): 100.79 Random Orbit Sander, 119.24 Cordless Drill 18V, 125.23 Cordless Drill 20V, 172.52 Wooden Workbench, 178.20 Workbench with Drawers. Prices are non-integer while slider values are integers, so exact-equality boundaries (PR3) cannot be reached through the UI; see Known limitations.
 - Product cards: [data-test=product-price], [data-test=product-name]; empty state: [data-test=no-results] with text "There are no products found."; pagination: .pagination (results span several pages, so collect prices across all pages before asserting). Category checkboxes data-test=category-<id> (e.g. Drill = category-01M8BVMY0MCP04P92M81B8706W), brand checkboxes data-test=brand-<id> (MightyCraft = brand-01M8BVMXHZB1XBDGY1YK3V9TBM).
 - Timing: the list updates asynchronously after a handle moves (debounced). Tests must wait for the products API response / list change before asserting; asserting immediately reads stale results. Do not treat this as a defect by itself; see scenario 5.6.
 
 Observed discrepancies / suspected defects (see inline per scenario):
 1. (Observation, possible PR4 ambiguity) Pressing ArrowRight/End on the min handle when min == max does not block the min handle; it pushes the max handle up with it (e.g. 100,100 -> ArrowRight -> 100,101; End on min at 100 moved max to 200). Final state always has min <= max so PR4 is satisfied; recorded as behavior to confirm, not a confirmed defect.
 2. (Observation vs PR1 wording) Default slider is 1..100 on a 0..200 scale, so the default view hides products priced above 100. PR1 only requires that the list match the displayed range, which holds. Tests assert list == displayed range, not list == whole catalog.
-3. No confirmed contradiction of PR1-PR6 was found by exploration. Scenarios below are written from the requirements so any regression/defect will fail them.
+3. (Suspected defect, PR2) The list can show results for an old range. The app sends one products request per handle step and does not cancel earlier ones; it renders whichever response arrives last. When an older range's response arrives after the newest one, the slider shows e.g. 41..100 while the list shows products priced below 41 (observed: $38.51, and the full 1..100 list). Reproduced on demand by delaying the old range's response. Caught intermittently by 2.2.
+
+## Known limitations
+
+- Exact PR3 boundaries cannot be reached via the UI. The slider only takes integer values, and every catalog price has cents (e.g. $100.79), so no live product is priced exactly at a reachable min or max. PR3 inclusivity at an exact boundary ("a product priced 100.00 is shown when max is 100") is therefore not tested. Scenario 3.1 covers the nearest observable case instead: a product just above the max is hidden, and is shown once the max moves past it.
 
 ## Core set
 
@@ -30,13 +34,12 @@ Generate these first. Together they cover each requirement at least once.
 | 1 | 1.2. [PR1] Initial product list contains only products within the displayed default range | PR1 |
 | 2 | 2.1. [PR2] Moving the max handle down narrows results (keyboard) | PR2 |
 | 3 | 2.2. [PR2] Moving the min handle up narrows results | PR2 |
-| 4 | 3.1. [PR3] Product at the exact max price is shown (mocked data) | PR3 |
-| 5 | 3.2. [PR3] Product at the exact min price is shown (mocked data) | PR3 |
-| 6 | 4.2. [PR4] Min stepped past max one step at a time | PR4 |
-| 7 | 4.3. [PR4] Max handle cannot go below the min handle | PR4 |
-| 8 | 5.1. [PR5] Empty range shows a 'no products found' message | PR5 |
-| 9 | 6.1. [PR6] Category filter combined with the default price range | PR6 |
-| 10 | 6.5. [PR6] Brand filter combined with the price range | PR6 |
+| 4 | 3.1. [PR3] A product just above the max is excluded until the max reaches it | PR3 |
+| 5 | 4.2. [PR4] Min stepped past max one step at a time | PR4 |
+| 6 | 4.3. [PR4] Max handle cannot go below the min handle | PR4 |
+| 7 | 5.1. [PR5] Empty range shows a 'no products found' message | PR5 |
+| 8 | 6.1. [PR6] Category filter combined with the default price range | PR6 |
+| 9 | 6.5. [PR6] Brand filter combined with the price range | PR6 |
 
 ## Test Scenarios
 
@@ -149,23 +152,9 @@ Generate these first. Together they cover each requirement at least once.
 
 **Seed:** `seed.spec.ts`
 
-#### 3.1. [PR3] Product at the exact max price is shown (mocked data)
+Exact-boundary inclusivity cannot be reached via the UI; see Known limitations.
 
-**File:** `features/price-range/boundaries.spec.ts`
-
-**Steps:**
-  1. Before load, use page.route to intercept products API calls and, in the response, ensure a product priced exactly 100.00 exists (modify an item price), honoring the request's between=price,1,100 filter in the mock if needed. Load the home page (default max 100).
-    - expect: The product priced exactly 100.00 is shown (inclusive upper bound).
-
-#### 3.2. [PR3] Product at the exact min price is shown (mocked data)
-
-**File:** `features/price-range/boundaries.spec.ts`
-
-**Steps:**
-  1. Intercept the products API to include a product priced exactly 1.00 and load the home page (default min 1).
-    - expect: The product priced exactly 1.00 is shown (inclusive lower bound).
-
-#### 3.3. [PR3] A product just above the max is excluded until the max reaches it (live data)
+#### 3.1. [PR3] A product just above the max is excluded until the max reaches it
 
 **File:** `features/price-range/boundaries.spec.ts`
 
@@ -175,7 +164,7 @@ Generate these first. Together they cover each requirement at least once.
   2. Press ArrowRight on the max handle once (max 101) and wait for refresh.
     - expect: Every price is <= 101 and Random Orbit Sander ($100.79, now inside the range) is shown.
 
-#### 3.4. [PR3] Min at the scale minimum (0) keeps every price in range
+#### 3.2. [PR3] Min at the scale minimum (0) keeps every price in range
 
 **File:** `features/price-range/boundaries.spec.ts`
 
@@ -183,7 +172,7 @@ Generate these first. Together they cover each requirement at least once.
   1. Load home page. Focus min handle and press Home (min 0). Wait for refresh.
     - expect: Min handle value is 0; every price is within [0, max] (test data: the cheapest product, Washers $3.55, falls inside).
 
-#### 3.5. [PR3] Max at the scale maximum (200) keeps every price in range
+#### 3.3. [PR3] Max at the scale maximum (200) keeps every price in range
 
 **File:** `features/price-range/boundaries.spec.ts`
 
